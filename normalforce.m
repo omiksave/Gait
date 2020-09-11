@@ -81,7 +81,7 @@ while itr
         close all;
     end
 end
-disp('Press any key to continue!');
+disp('Press any key to continue');
 grf = force_fil;
 w = waitforbuttonpress;
 if w==1
