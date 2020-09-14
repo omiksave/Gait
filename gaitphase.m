@@ -35,11 +35,12 @@ max_sample = max(range)+1;%Cycle with most number of points
 min_sample = min(range)+1;%Cycle with most number of points
 clearvars i
 mex = zeros(length(frame),1);
-for i=1:length(frame)
-    mex(i) = ankle(frame(i),1);
+for i=1:length(frame)-1
+    mex = ankle(frame(i));
+    ankle(frame(i):frame(i+1)-1) = ankle(frame(i):frame(i+1)-1)-mex;
 end
-offset = mean(mex);
-ankle_norm = ankle-offset;
+% offset = mean(mex);
+ankle_norm = ankle;
 clearvars i count
 toestrike = zeros(length(frame)-1,1);
 heeloff = zeros(length(frame)-1,1);
