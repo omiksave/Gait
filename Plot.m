@@ -50,7 +50,7 @@ ankle = 57.296*data.data(:,1);% Converting ankle angle to degrees from radians
 %ankle = readdat('raw2'); ankle = ankle.data(:,1);
 %% Estimate noise in GRF
 T = 1/2000;
-force = normalforce(data.data(:,3),T);
+force = normalforce(data.data(:,8),T);
 %% Get Heel Strikes
 [frame,strike,ankle_norm,avg_time1] = gaitphase(force,data.data(:,1));
 %% Save force and frame
@@ -59,8 +59,8 @@ save('4','force','frame')
 robodyn(data,force,frame,strike,'Walking 0 Nms/rad')
 %% Plotting ankle dyanmics
 for i = 1
-    [mean_pos(:,i),~] = norgait(ankle_norm(:,i),frame);
-    [mean_vel(:,i)] = norgait(data.data(:,2),frame,0,'0 Nms/rad');
+    [m2y,d2y,t2y] = norgait(ankle_norm,frame(1:round(4/7*length(frame))-1));
+    [mt,dt] = norgait(-0.25*data.data(:,6),frame);
     [mean_acc(:,i)] = norgait(data.data(:,3),frame,0,'0 Nms/rad');
     [mean_int(:,i)] = norgait(data.data(:,4),frame,0,'0 Nms/rad');
 end
