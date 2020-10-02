@@ -1,4 +1,4 @@
-function [mean_curv,dev_plot] = norgait(data,frame,int,ylab,tit)
+function [mean_curv,dev_plot,toe_off] = norgait(data,frame,int,ylab,tit)
 %NORGAIT is a function that generates two (gait) normalized figures of the given signal:
 % 
 %*Mean signal and +/- 1 standard deviation.
@@ -69,15 +69,16 @@ for i = 1:size(resamp,1)
     dev_plot(i,2) = mean_curv(i)-std_dev(i); % -1 Standard Deviation
 end
 %Plot Mean and Standard Deviation of Gait Cycle
+toe_strike = find(mean_curv == min(mean_curv(1:round(0.2*length(mean_curv)))));
+heel_off = find(mean_curv == max(mean_curv(toe_strike:round(0.55*length(mean_curv)))));
+toe_off = find(mean_curv == min(mean_curv(heel_off:round(0.75*length(mean_curv)))));
 figure
 p1 = plot(0:100/(length(mean_curv)-1):100,mean_curv,'Color','r','LineWidth',1.2);
 hold on
 p2 = plot(0:100/(length(dev_plot)-1):100,dev_plot(:,1),'LineStyle','--','Color','k');
 p3 = plot(0:100/(length(dev_plot)-1):100,dev_plot(:,2),'LineStyle','--','Color','k');
 if int==1
-    toe_strike = find(mean_curv == min(mean_curv(1:round(0.2*length(mean_curv)))));
-    heel_off = find(mean_curv == max(mean_curv(toe_strike:round(0.55*length(mean_curv)))));
-    toe_off = find(mean_curv == min(mean_curv(heel_off:round(0.75*length(mean_curv)))));
+    
     p3 = plot((heel_off/length(mean_curv))*100,mean_curv(heel_off),'o','MarkerSize',10,'MarkerFaceColor','b','MarkerEdgeColor','k');
     p4 = plot((toe_off/length(mean_curv))*100,mean_curv(toe_off),'o','MarkerSize',10,'MarkerFaceColor','r','MarkerEdgeColor','k');
     p5 = plot((toe_strike/length(mean_curv))*100,mean_curv(toe_strike),'o','MarkerSize',10,'MarkerFaceColor','g','MarkerEdgeColor','k');
