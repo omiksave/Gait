@@ -3,7 +3,7 @@ b = [+1 -0.5];% Damping Range
 b_up = b(1,1); b_low = b(1,2);
 bc = 0; % Center of damping
 sn = 0.95; % Sensitivity
-e = 0.12; % Lever arm
+e = 0.13; % Lever arm
 [num,den] = butter(2,7/1000);
 
 
@@ -45,7 +45,7 @@ twenty = twenty1-base;% Substracting offset from +20
 ank_mul = ((((fifteen*4)+(twenty*3))/(2*60))^-1)*0.01745;% Calculating multiplier (rad/V)
 %% File read
 clearvars Input1
-data = readdat('data4');
+data = readdat('data1');
 ankle = 57.296*data.data(:,1);% Converting ankle angle to degrees from radians
 %ankle = readdat('raw2'); ankle = ankle.data(:,1);
 %% Estimate noise in GRF

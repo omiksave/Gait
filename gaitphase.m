@@ -55,10 +55,11 @@ for i = 1:length(frame)-1
     count = count+1;
 end
 strike = [toestrike heeloff toeoff];
-avg_time = (mean(toeoff-frame(1:end-1))+1)/2000;
+avg_stance = (mean(toeoff-frame(1:end-1))+1)/2000;
+avg_time = (mean(range)+1)/2000;
 disp(['Time Elapsed: ',num2str(toc),' seconds'])
-disp(['Average Gait Cylce: ',num2str(((mean(range)+1)/2000)),' seconds'])
-disp(['Average Stance Time: ',num2str(avg_time),' seconds'])
+disp(['Average Gait Cylce: ',num2str((avg_time)),' seconds'])
+disp(['Average Stance Time: ',num2str(avg_stance),' seconds'])
 disp(['Longest Gait Cycle: ',num2str((max_sample/2000)),' seconds'])
 disp(['Shortest Gait Cycle: ',num2str((min_sample/2000)),' seconds'])
 end
