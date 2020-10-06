@@ -55,7 +55,7 @@ save('4','force','frame')
 %% Plotting robot dynamics
 robodyn(data,force,frame,strike,'Walking 0 Nms/rad')
 %% Plotting ankle dyanmics
-[m2,d2,t2] = norgait(ankle_norm,frame);
+[m,d,t] = norgait(ankle_norm,frame);
 %[mt,dt] = norgait(-0.25*data.data(:,6),frame);
 %% Plotting nominal ankle (Stiffness only)
 nom_x = linspace(0,100,length(m(1:t)));
@@ -63,3 +63,4 @@ nom_y = m(1:t);
 %% Plotting reference stiffness curve, Lee/Rousse et. al
 stiff_x = linspace(0,100,length(m(1:t)));
 stiff_y = stiff_ref(linspace(0,54.667,length(m(1:t))));
+con_stiff = mean(stiff_y);
