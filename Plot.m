@@ -4,14 +4,11 @@ b_up = b(1,1); b_low = b(1,2);
 bc = 0; % Center of damping
 sn = 0.95; % Sensitivity
 e = 0.13; % Lever arm
-[num,den] = butter(2,7/1000);
-
-
-%%
+[b,a] = butter(2,7/1000);
+%% Initializing damping controller
 tx_max = 1; tx_min = 1; k = 1; kp = 1;  kn = 1;
 %% Kalman filter parameter intialize
 T = 1/2000; %Sample Time
-Tx = 0.5/1000; %Sample Time
 A = [1 T 0.5*T^2;0 1 T;0 0 1];
 G = [0.1667*T^3;0.5*T^2;T];
 C = [1 0 0];
@@ -58,9 +55,5 @@ save('4','force','frame')
 %% Plotting robot dynamics
 robodyn(data,force,frame,strike,'Walking 0 Nms/rad')
 %% Plotting ankle dyanmics
-for i = 1
-    [m2y,d2y,t2y] = norgait(ankle_norm,frame(1:round(4/7*length(frame))-1));
-    [mt,dt] = norgait(-0.25*data.data(:,6),frame);
-    [mean_acc(:,i)] = norgait(data.data(:,3),frame,0,'0 Nms/rad');
-    [mean_int(:,i)] = norgait(data.data(:,4),frame,0,'0 Nms/rad');
-end
+[m2y,d2y,t2y] = norgait(ankle_norm,frame(1:round(4/7*length(frame))-1));
+[mt,dt] = norgait(-0.25*data.data(:,6),frame);
