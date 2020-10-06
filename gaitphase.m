@@ -1,4 +1,4 @@
-function [frame,strike,ankle_norm,avg_time] = gaitphase(force,ankle)
+function [frame,strike,ankle_norm,avg_stance] = gaitphase(force,ankle)
 %GAITPHASE is used to determine gait events from the supplied forceplate and ankle position data.
 % 
 %Usage:
@@ -21,14 +21,7 @@ for i = 1:length(force)-1
         count = count+1;
         frame(count,1) = i;%Pull sample number corresponding to heelstrike
     end
-end
-count = 0;
-% for i = 1:length(force)-1
-%    if force(i,1) > 0 && force(i+1,1) <= 0
-%         count = count+1;
-%         stroke(count,1) = i;%Pull sample number corresponding to heelstrike
-%     end
-% end 
+end 
 frame = frame(2:end);
 range = abs(diff(frame));%Count sample range for heelstrike
 max_sample = max(range)+1;%Cycle with most number of points
