@@ -4,9 +4,7 @@ b_up = b(1,1); b_low = b(1,2);
 bc = 0; % Center of damping
 sn = 0.95; % Sensitivity
 e = 0.13; % Lever arm
-[num,den] = butter(2,7/1000);
-
-
+[b,a] = butter(2,20/1000);
 %%
 tx_max = 1; tx_min = 1; k = 1; kp = 1;  kn = 1;
 %% Kalman filter parameter intialize
@@ -45,22 +43,26 @@ twenty = twenty1-base;% Substracting offset from +20
 ank_mul = ((((fifteen*4)+(twenty*3))/(2*60))^-1)*0.01745;% Calculating multiplier (rad/V)
 %% File read
 clearvars Input1
-data = readdat('data1');
+data = readdat('data11');
 ankle = 57.296*data.data(:,1);% Converting ankle angle to degrees from radians
-%ankle = readdat('raw2'); ankle = ankle.data(:,1);
 %% Estimate noise in GRF
 T = 1/2000;
 force = normalforce(data.data(:,8),T);
 %% Get Heel Strikes
-[frame,strike,ankle_norm,avg_time1] = gaitphase(force,data.data(:,1));
+[frame,strike,ankle_norm] = gaitphase(force,data.data(:,1));
 %% Save force and frame
 save('4','force','frame')
 %% Plotting robot dynamics
 robodyn(data,force,frame,strike,'Walking 0 Nms/rad')
 %% Plotting ankle dyanmics
-for i = 1
-    [m2y,d2y,t2y] = norgait(ankle_norm,frame(1:round(4/7*length(frame))-1));
-    [mt,dt] = norgait(-0.25*data.data(:,6),frame);
-    [mean_acc(:,i)] = norgait(data.data(:,3),frame,0,'0 Nms/rad');
-    [mean_int(:,i)] = norgait(data.data(:,4),frame,0,'0 Nms/rad');
-end
+[m1,d1,t1] = norgait(ankle_norm,frame);
+%[mt,dt] = norgait(-0.25*data.data(:,6),frame);
+%% Plotting nominal ankle (Stiffness only)
+nom_x = linspace(0,100,length(m(1:t)));
+nom_y = m(1:t);
+%% Plotting reference stiffness curve, Lee/Rousse et. al
+stiff_x = linspace(0,100,length(m(1:t)));
+stiff_y = stiff_ref(linspace(0,54.667,length(m(1:t))));
+con_stiff = mean(stiff_y);
+%% Clean temporary files
+%keep_clean();
