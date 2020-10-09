@@ -56,6 +56,7 @@ for i = 1:length(range)
         resamp(:,i) = data(frame(i):frame(i+1));
         %x_i = i;
     end
+
 end
 %Find mean of all gait cycles
 clearvars i
