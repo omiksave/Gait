@@ -54,7 +54,6 @@ for i = 1:length(range)
        
     else
         resamp(:,i) = data(frame(i):frame(i+1));
-        %x_i = i;
     end
 
 end
