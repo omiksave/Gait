@@ -43,19 +43,19 @@ twenty = twenty1-base;% Substracting offset from +20
 ank_mul = ((((fifteen*4)+(twenty*3))/(2*60))^-1)*0.01745;% Calculating multiplier (rad/V)
 %% File read
 clearvars Input1
-data = readdat('data11');
+data = readdat('data3');
 ankle = 57.296*data.data(:,1);% Converting ankle angle to degrees from radians
 %% Estimate noise in GRF
 T = 1/2000;
 force = normalforce(data.data(:,8),T);
 %% Get Heel Strikes
-[frame,strike,ankle_norm] = gaitphase(force,data.data(:,1));
+[frame,strike,ankle_norm,avg_time1] = gaitphase(force,data.data(:,1),1/T);
 %% Save force and frame
 save('4','force','frame')
 %% Plotting robot dynamics
-robodyn(data,force,frame,strike,'Walking 0 Nms/rad')
+robodyn(data,force,frame,strike,'Walking 0 Nms/rad');
 %% Plotting ankle dyanmics
-[m1,d1,t1] = norgait(ankle_norm,frame);
+[m3,d3,t3] = norgait(ankle_norm,frame);%(round(4/7*length(frame)):end));
 %[mt,dt] = norgait(-0.25*data.data(:,6),frame);
 %% Plotting nominal ankle (Stiffness only)
 nom_x = linspace(0,100,length(m(1:t)));
@@ -65,4 +65,4 @@ stiff_x = linspace(0,100,length(m(1:t)));
 stiff_y = stiff_ref(linspace(0,54.667,length(m(1:t))));
 con_stiff = mean(stiff_y);
 %% Clean temporary files
-%keep_clean();
+keep_clean();
