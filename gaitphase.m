@@ -1,4 +1,4 @@
-function [frame,strike,ankle_norm,avg_stance] = gaitphase(force,ankle)
+function [frame,strike,ankle_norm,avg_stance] = gaitphase(force,ankle,freq)
 %GAITPHASE is used to determine gait events from the supplied forceplate and ankle position data.
 % 
 %Usage:
@@ -48,11 +48,11 @@ for i = 1:length(frame)-1
     count = count+1;
 end
 strike = [toestrike heeloff toeoff];
-avg_stance = (mean(toeoff-frame(1:end-1))+1)/2000;
-avg_time = (mean(range)+1)/2000;
+avg_stance = (mean(toeoff-frame(1:end-1))+1)/freq;
+avg_time = (mean(range)+1)/freq;
 disp(['Time Elapsed: ',num2str(toc),' seconds'])
 disp(['Average Gait Cylce: ',num2str((avg_time)),' seconds'])
 disp(['Average Stance Time: ',num2str(avg_stance),' seconds'])
-disp(['Longest Gait Cycle: ',num2str((max_sample/2000)),' seconds'])
-disp(['Shortest Gait Cycle: ',num2str((min_sample/2000)),' seconds'])
+disp(['Longest Gait Cycle: ',num2str((max_sample/freq)),' seconds'])
+disp(['Shortest Gait Cycle: ',num2str((min_sample/freq)),' seconds'])
 end
