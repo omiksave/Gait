@@ -15,12 +15,17 @@ function [frame,strike,ankle_norm,avg_stance] = gaitphase(force,ankle,freq)
 % 
 %ankle - Input vector consisting of raw aquired goniometer signal.
 tic;
-count = 0; %Set counter
+count = 0;
+icount = 0;%Set counter
 for i = 1:length(force)-1
     if force(i,1) <= 0 && force(i+1,1) > 0
         count = count+1;
         frame(count,1) = i;%Pull sample number corresponding to heelstrike
+    elseif force(i,1) > 0 && force(i+1,1) <= 0
+        icount = icount+1;
+        strike(icount,1) = i;
     end
+    
 end 
 frame = frame(2:end);
 range = abs(diff(frame));%Count sample range for heelstrike
@@ -47,8 +52,8 @@ for i = 1:length(frame)-1
     toeoff(count,1) = frame(i) + find(framx == (min(ankle_norm(heeloff(i):frame(i)+round(0.75*frac)))),1,'first');  
     count = count+1;
 end
-strike = [toestrike heeloff toeoff];
-avg_stance = (mean(toeoff-frame(1:end-1))+1)/freq;
+%strike = [toestrike heeloff toeoff];
+avg_stance = 0;%(mean(abs(strike(2:end) - frame(1:end-1))+1))/freq;
 avg_time = (mean(range)+1)/freq;
 disp(['Time Elapsed: ',num2str(toc),' seconds'])
 disp(['Average Gait Cylce: ',num2str((avg_time)),' seconds'])
