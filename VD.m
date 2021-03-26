@@ -1,10 +1,11 @@
-function [LF,RF] = VD(MyClient,b1)
-bar_draw(0,0,b1);
-while toc(tic)<=200
+function VD(MyClient,b1,b2,lim)
+t = tic;
+while (toc(t)/60)<=28
     [LHEE,RHEE,LF,RF] = frameupdate(MyClient);
-    if -LF<=40 && -RF>=100 %&& LHEE>RHEE
-            bar_draw(abs(RF),1000,b1);
-    elseif -RF<=40 && -LF>=100 %&& RHEE>LHEE
-            bar_draw(1000,abs(LF),b1)
+    if LF<=40 && RHEE>LHEE && (toc(t)/60)-3<=11
+            bar_draw(max(0,RHEE-LHEE),[],b1,b2,lim);
+    elseif RF<=40 && LHEE>RHEE && (toc(t)/60)-3<=11
+            bar_draw([],(1+max(0,(3*floor((toc(t)/60)-2)/100)))*max(0,LHEE-RHEE),b1,b2,lim);
     end
+    ceil(toc(t)/60)
 end
