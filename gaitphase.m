@@ -1,4 +1,4 @@
-function [frame,strike,ankle_norm,avg_stance] = gaitphase(force,ankle,freq)
+function [frame_format,strike,ankle_norm] = gaitphase(force,ankle,freq,body_weight)
 %GAITPHASE is used to determine gait events from the supplied forceplate and ankle position data.
 % 
 %Usage:
@@ -18,10 +18,10 @@ tic;
 count = 0;
 icount = 0;%Set counter
 for i = 1:length(force)-1
-    if force(i,1) <= 0 && force(i+1,1) > 0
+    if force(i,1) <= 0.045*body_weight && force(i+1,1) > 0.045*body_weight
         count = count+1;
         frame(count,1) = i;%Pull sample number corresponding to heelstrike
-    elseif force(i,1) > 0 && force(i+1,1) <= 0
+    elseif force(i,1) > 0.045*body_weight && force(i+1,1) <= 0.045*body_weight
         icount = icount+1;
         strike(icount,1) = i;
     end
@@ -29,8 +29,11 @@ for i = 1:length(force)-1
 end 
 frame = frame(2:end);
 range = abs(diff(frame));%Count sample range for heelstrike
-max_sample = max(range)+1;%Cycle with most number of points
-min_sample = min(range)+1;%Cycle with most number of points
+% max_sample = max(range)+1;%Cycle with most number of points
+% min_sample = min(range)+1;%Cycle with most number of points
+frame(diff(frame)<0.7*mean(diff(frame)))=[]; %Reject noise points in between gait cycles
+frame_format = [frame(1:end-1) frame(2:end)];
+frame_format(diff(frame_format,1,2)>1.4*mean(diff(frame)))=[];
 clearvars i
 mex = zeros(length(frame),1);
 for i=1:length(frame)-1
@@ -53,11 +56,11 @@ for i = 1:length(frame)-1
     count = count+1;
 end
 %strike = [toestrike heeloff toeoff];
-avg_stance = 0;%(mean(abs(strike(2:end) - frame(1:end-1))+1))/freq;
-avg_time = (mean(range)+1)/freq;
+%avg_stance = mean(diff(frame_format))/freq;%(mean(abs(strike(2:end) - frame(1:end-1))+1))/freq;
+avg_time = mean(diff(frame_format,1,2))/freq;
 disp(['Time Elapsed: ',num2str(toc),' seconds'])
-disp(['Average Gait Cylce: ',num2str((avg_time)),' seconds'])
-disp(['Average Stance Time: ',num2str(avg_stance),' seconds'])
-disp(['Longest Gait Cycle: ',num2str((max_sample/freq)),' seconds'])
-disp(['Shortest Gait Cycle: ',num2str((min_sample/freq)),' seconds'])
+disp(['Average Gait Cylce: ',num2str(avg_time),' seconds'])
+%disp(['Average Stance Time: ',num2str(avg_stance),' seconds'])
+disp(['Longest Gait Cycle: ',num2str(max(diff(frame_format,1,2))/freq),' seconds'])
+disp(['Shortest Gait Cycle: ',num2str(min(diff(frame_format,1,2))/freq),' seconds'])
 end
